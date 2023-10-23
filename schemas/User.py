@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from models import Wallet
+from schemas import Wallet
+
 
 class User(BaseModel):
     id: int

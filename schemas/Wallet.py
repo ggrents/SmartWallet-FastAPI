@@ -3,7 +3,7 @@ from typing import Dict, Optional
 
 from pydantic import BaseModel
 
-from models import User
+from schemas import User
 
 
 class Currency(str, Enum):
