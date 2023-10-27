@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.util.preloaded import orm
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./smart_wallet_23.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./smart_wallet_29.db"
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 
 engine = create_engine(

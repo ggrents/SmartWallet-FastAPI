@@ -1,20 +1,17 @@
-from fastapi import FastAPI, Depends
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
 
-from models import models
-from database import engine, get_db
-from models.models import User
+import models
+from database import engine
 from routers.user_router import user_router
+from routers.accounts_router import account_router
 
-#models.Base.metadata.create_all(bind=engine)
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Smart Wallet"
 )
 
 app.include_router(user_router)
+app.include_router(account_router)
 
-
-@app.get("/ee")
-def kk(db: Session = Depends(get_db)):
-    return db.query(User).first()
