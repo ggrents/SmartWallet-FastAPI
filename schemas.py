@@ -15,8 +15,9 @@ class CreateUpdateUserSchema(BaseModel):
     password: str
 
 
-class GetAccountSchema(BaseModel) :
+class GetAccountSchema(BaseModel):
     pass
+
 
 class AccountSchema(BaseModel):
     user_id: int

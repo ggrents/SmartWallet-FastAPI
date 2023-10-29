@@ -18,10 +18,14 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
+    balance = Column("balance", DECIMAL(10, 2), default=0.00)
     is_active = Column(Boolean, default=True)
     registration_date = Column(DateTime, default=datetime.utcnow)
 
     accounts = relationship("Account", back_populates="user")
+
+
+
 
 
 class Transaction(Base):
