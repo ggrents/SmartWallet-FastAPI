@@ -6,7 +6,7 @@ from database import engine
 from routers.user_router import user_router
 from routers.accounts_router import account_router
 from routers.user_manager import user_manage_router
-from auth import get_current_user
+from dependencies import get_current_user
 
 models.Base.metadata.create_all(bind=engine)
 

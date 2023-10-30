@@ -3,14 +3,10 @@ from datetime import datetime, timedelta
 import bcrypt
 import jwt
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
-from sqlalchemy.dialects import registry
-from sqlalchemy.orm import relationship
 
 from database import Base, SECRET_KEY
-
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DECIMAL
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 
 
 class User(Base):
