@@ -21,5 +21,4 @@ app.include_router(user_manage_router)
 
 @app.get("/")
 def m(request : Request, current_user: models.User = Depends(get_current_user)):
-    request.headers["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZXhwIjoxNjk4NzM5ODA1LjE0OTIwNH0.22VmVohsDxh5kKyuiPuJsVFvokyTy-bGdDpaTFE8LXw"
-    return f"{models.User.username} qqq!"
+    return f"{current_user.username} qqq!"
