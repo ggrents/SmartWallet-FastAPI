@@ -1,10 +1,12 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
+import bcrypt
+import jwt
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.dialects import registry
 from sqlalchemy.orm import relationship
 
-from database import Base
+from database import Base, SECRET_KEY
 
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DECIMAL
 from sqlalchemy.orm import relationship
@@ -24,8 +26,20 @@ class User(Base):
 
     accounts = relationship("Account", back_populates="user")
 
+    def hash_password(self, password: str):
+        self.hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
+    def verify_password(self, password: str):
+        return bcrypt.checkpw(password.encode('utf-8'), self.hashed_password)
 
+    def generate_token(self):
+        expiration = datetime.utcnow() + timedelta(hours=24)
+        payload = {
+            "sub": str(self.id),
+            "exp": expiration.timestamp()
+        }
+
+        return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
 
 class Transaction(Base):

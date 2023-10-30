@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Depends, Path, Body, HTTPException
 from sqlalchemy.orm import Session
+from starlette.requests import Request
+from starlette.responses import Response
+
 from models import User
-from database import get_db
+from dependencies import get_db
 from schemas import GetUserSchema, CreateUpdateUserSchema
 from DAL import users_crud as crud
 
@@ -9,17 +12,19 @@ user_router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @user_router.get("/", response_model=list[GetUserSchema])
-async def get_users(db: Session = Depends(get_db), skip: int = 0, limit: int = 10):
+async def get_users(response : Response, request : Request, db: Session = Depends(get_db), skip: int = 0, limit: int = 10):
     users = crud.get_users(db, skip=skip, limit=limit)
+
     if not users :
         raise HTTPException(status_code=404, detail="Users not found")
+
     return users
 
 
 @user_router.get("/{user_id}", response_model=GetUserSchema)
 async def get_user_by_id(user_id: int = Path(), db: Session = Depends(get_db)):
     user = crud.get_user_by_id(db, user_id)
-    if not user :
+    if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 

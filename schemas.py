@@ -1,4 +1,26 @@
+from typing import Optional
+
 from pydantic import BaseModel
+
+
+class SignUpUser(BaseModel):
+    username: str
+    email: str
+    password: str
+
+
+class LoginUser(BaseModel):
+    username: str
+    password: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class DataToken(BaseModel):
+    id: Optional[str] = None
 
 
 class GetUserSchema(BaseModel):

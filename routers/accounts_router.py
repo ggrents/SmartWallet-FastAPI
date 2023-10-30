@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Depends, Path, Body, HTTPException
 from sqlalchemy.orm import Session
+from starlette.requests import Request
+from starlette.responses import Response
+
 from models import User
-from database import get_db
+from dependencies import get_db
 from schemas import GetUserSchema, CreateUpdateUserSchema, AccountSchema
 from DAL import users_crud, accounts_crud
 
@@ -25,7 +28,8 @@ async def get_account_by_id(acc_id: int = Path(), db: Session = Depends(get_db))
 
 
 @account_router.delete("/{acc_id}")
-async def remove_account(acc_id: int, db: Session = Depends(get_db)):
+async def remove_account(request : Request, acc_id: int, db: Session = Depends(get_db)):
+
     return accounts_crud.remove_account(db, acc_id)
 
 
