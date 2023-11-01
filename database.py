@@ -3,7 +3,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.util.preloaded import orm
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./smart_wallet_29.db"
+from settings import SQLALCHEMY_DATABASE_URL
+
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 
 engine = create_engine(
@@ -13,5 +14,5 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
-SECRET_KEY = "ggggg2929"
+
 

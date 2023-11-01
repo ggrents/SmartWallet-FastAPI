@@ -5,7 +5,8 @@ import jwt
 from sqlalchemy.orm import Session
 
 from models import User
-from database import Base, SECRET_KEY
+from database import Base
+from settings import SECRET_KEY
 
 
 def get_db():
