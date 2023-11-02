@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from DAL import accounts_crud
+from dal import accounts_crud
 from dependencies import get_current_user, get_db
 from models import User, Account, Currency
 from schemas import GetUserSchema, GetAccountSchema, GetCurrencySchema

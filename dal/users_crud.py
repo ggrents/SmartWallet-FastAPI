@@ -19,9 +19,10 @@ def create_user(db: Session, user: CreateUpdateUserSchema):
         username=user.username,
         email=user.email,
         hashed_password=user.password,
-        balance = 0
+        balance=0
 
     )
+
     db.add(_user)
     db.commit()
     db.refresh(_user)
@@ -34,7 +35,7 @@ def get_active_users(db: Session):
 
 def remove_user(db: Session, user_id: int):
     _user = get_user_by_id(db=db, user_id=user_id)
-    if not _user :
+    if not _user:
         raise HTTPException(status_code=404, detail="User not found")
     db.delete(_user)
     db.commit()
@@ -43,7 +44,7 @@ def remove_user(db: Session, user_id: int):
 
 def update_user(db: Session, user_id: int, user: CreateUpdateUserSchema):
     _user = get_user_by_id(db=db, user_id=user_id)
-    if not _user :
+    if not _user:
         raise HTTPException(status_code=404, detail="User not found")
 
     _user.username = user.username

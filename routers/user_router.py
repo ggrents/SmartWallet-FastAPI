@@ -6,7 +6,7 @@ from starlette.responses import Response
 from models import User
 from dependencies import get_db
 from schemas import GetUserSchema, CreateUpdateUserSchema
-from DAL import users_crud as crud
+from dal import users_crud as crud
 
 user_router = APIRouter(prefix="/users", tags=["Users"])
 
