@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from sqlalchemy import select, insert, delete, update
 from starlette.responses import JSONResponse
 
 from models import User
@@ -7,39 +8,49 @@ from schemas import GetUserSchema, CreateUpdateUserSchema
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(User).offset(skip).limit(limit).all()
+    query = select(User).offset(0).limit(limit)
+    result = db.execute(query).scalars().all()
+
+    return result
 
 
 def get_user_by_id(db: Session, user_id: int):
-    return db.query(User).filter(User.id == user_id).first()
+    query = select(User).where(User.id == user_id)
+    result = db.execute(query).scalar()
+
+    return result
 
 
 def create_user(db: Session, user: CreateUpdateUserSchema):
-    _user = User(
-        username=user.username,
-        email=user.email,
-        hashed_password=user.password,
-        balance=0
+    query = insert(User).values(username=user.username,
+                                email=user.email,
+                                hashed_password=user.password,
+                                balance=0)
 
-    )
+    db.execute(query)
 
-    db.add(_user)
     db.commit()
-    db.refresh(_user)
-    return _user
+
+    return JSONResponse(content={"detail": f"User {user.username} has registered"}, status_code=200)
 
 
 def get_active_users(db: Session):
-    return db.query(User).filter(User.is_active == "1").all()
+    query = select(User).where(User.is_active)
+    result = db.execute(query).scalars().all()
+
+    return result
 
 
 def remove_user(db: Session, user_id: int):
     _user = get_user_by_id(db=db, user_id=user_id)
     if not _user:
         raise HTTPException(status_code=404, detail="User not found")
-    db.delete(_user)
+
+    query = delete(User).where(User.id == user_id)
+    db.execute(query)
+
     db.commit()
-    return JSONResponse(content={"detail": "OK"}, status_code=200)
+    return JSONResponse(content={"detail": f"User {_user.username} has been deleted"}, status_code=200)
 
 
 def update_user(db: Session, user_id: int, user: CreateUpdateUserSchema):

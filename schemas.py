@@ -39,10 +39,19 @@ class AccountSchema(BaseModel):
 class GetCurrencySchema(BaseModel):
     currency_code: str
     currency_symbol: str
+    exchange_rate : float
 
 
 class GetAccountSchema(BaseModel):
     currency: GetCurrencySchema
+    balance: float
+
+class ReplData(BaseModel) :
+    amount : float
+
+
+class UpdateAccountSchema(BaseModel):
+    default_currency_id: int
     balance: float
 
 

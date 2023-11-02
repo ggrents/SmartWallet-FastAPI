@@ -1,53 +1,57 @@
 from fastapi import HTTPException
+from sqlalchemy import select, delete, insert, update
 from starlette.responses import JSONResponse
 
 from models import User, Account
 from sqlalchemy.orm import Session
-from schemas import GetUserSchema, CreateUpdateUserSchema, AccountSchema
+from schemas import GetUserSchema, CreateUpdateUserSchema, AccountSchema, GetAccountSchema, UpdateAccountSchema
 
 
 def get_accounts_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 100):
-    return db.query(Account).filter(Account.user_id == user_id).offset(skip).limit(limit).all()
+    query = select(Account).where(Account.user_id == user_id)
+    result = db.execute(query)
+    _accs = result.scalars().all()
+    return result
 
 
 def get_account_by_id(db: Session, acc_id: int):
-    return db.query(Account).filter(Account.id == acc_id).first()
+    query = select(Account).filter(Account.id == acc_id)
+    result = db.execute(query).scalar()
+    if not result:
+        raise HTTPException(status_code=404, detail="Account is not exist")
+    return result
 
 
 def remove_account(db: Session, acc_id: int):
-    _acc = get_account_by_id(db=db, acc_id=acc_id)
+    _acc = get_account_by_id(db, acc_id)
 
-    if not _acc:
-        raise HTTPException(status_code=404, detail="Account not found")
-
-    db.delete(_acc)
+    query = delete(Account).where(Account.id == acc_id)
+    db.execute(query)
     db.commit()
+
     return JSONResponse(content={"detail": "OK"}, status_code=200)
 
 
 def create_account(db: Session, account: AccountSchema):
-    _account = Account(
-        user_id=account.user_id,
-        default_currency_id=account.default_currency_id,
-        balance=account.balance
-    )
+    query = insert(Account).values(user_id=account.user_id,
+                                   default_currency_id=account.default_currency_id,
+                                   balance=account.balance)
 
-    db.add(_account)
+    db.execute(query)
+
     db.commit()
-    db.refresh(_account)
-    return _account
+
+    return account
 
 
-def update_account(db: Session, acc_id: int, account: AccountSchema):
-    _account = get_account_by_id(db=db, id=acc_id)
+def update_account(db: Session, acc_id: int, account: UpdateAccountSchema):
+    _account = get_account_by_id(db=db, acc_id=acc_id)
+    query = update(Account).values(user_id=_account.user_id if not account.user_id else account.user_id,
+                                   default_currency_id=_account.default_currency_id if not account.default_currency_id else account.default_currency_id,
+                                   balance=_account.balance if not account.balance else account.balance
+                                   )
 
-    if not _account:
-        raise HTTPException(status_code=404, detail="Account not found")
-
-    _account.user_id = account.user_id
-    _account.default_currency_id = account.default_currency_id
-    _account.balance = account.balance
-
+    db.execute(query)
     db.commit()
     db.refresh(_account)
     return _account

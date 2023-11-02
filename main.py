@@ -12,7 +12,8 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Smart Wallet",
-    description=description
+    description=description,
+    docs_url="/"
 )
 
 app.include_router(user_router)
