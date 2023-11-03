@@ -2,9 +2,11 @@ from fastapi import HTTPException
 from sqlalchemy import select, insert, delete, update
 from starlette.responses import JSONResponse
 
-from models import User
+
 from sqlalchemy.orm import Session
-from schemas import GetUserSchema, CreateUpdateUserSchema
+
+from data.models.user import User
+from data.schemas.user import CreateUpdateUserScheme
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):
@@ -21,7 +23,7 @@ def get_user_by_id(db: Session, user_id: int):
     return result
 
 
-def create_user(db: Session, user: CreateUpdateUserSchema):
+def create_user(db: Session, user: CreateUpdateUserScheme):
     query = insert(User).values(username=user.username,
                                 email=user.email,
                                 hashed_password=user.password,
@@ -53,7 +55,7 @@ def remove_user(db: Session, user_id: int):
     return JSONResponse(content={"detail": f"User {_user.username} has been deleted"}, status_code=200)
 
 
-def update_user(db: Session, user_id: int, user: CreateUpdateUserSchema):
+def update_user(db: Session, user_id: int, user: CreateUpdateUserScheme):
     _user = get_user_by_id(db=db, user_id=user_id)
     if not _user:
         raise HTTPException(status_code=404, detail="User not found")

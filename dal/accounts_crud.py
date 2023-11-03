@@ -1,10 +1,9 @@
 from fastapi import HTTPException
 from sqlalchemy import select, delete, insert, update
 from starlette.responses import JSONResponse
-
-from models import User, Account
 from sqlalchemy.orm import Session
-from schemas import GetUserSchema, CreateUpdateUserSchema, AccountSchema, GetAccountSchema, UpdateAccountSchema
+from data.models.account import Account
+from data.schemas.account import AccountScheme, UpdateAccountScheme
 
 
 def get_accounts_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 100):
@@ -32,7 +31,7 @@ def remove_account(db: Session, acc_id: int):
     return JSONResponse(content={"detail": "OK"}, status_code=200)
 
 
-def create_account(db: Session, account: AccountSchema):
+def create_account(db: Session, account: AccountScheme):
     query = insert(Account).values(user_id=account.user_id,
                                    default_currency_id=account.default_currency_id,
                                    balance=account.balance)
@@ -44,7 +43,7 @@ def create_account(db: Session, account: AccountSchema):
     return account
 
 
-def update_account(db: Session, acc_id: int, account: UpdateAccountSchema):
+def update_account(db: Session, acc_id: int, account: UpdateAccountScheme):
     _account = get_account_by_id(db=db, acc_id=acc_id)
     query = update(Account).values(user_id=_account.user_id if not account.user_id else account.user_id,
                                    default_currency_id=_account.default_currency_id if not account.default_currency_id else account.default_currency_id,

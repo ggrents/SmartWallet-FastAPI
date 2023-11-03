@@ -6,15 +6,14 @@ from starlette import status
 from starlette.requests import Request
 from starlette.responses import Response
 
-from models import User
+from data.schemas.account import AccountScheme, UpdateAccountScheme
 from dependencies import get_db
-from schemas import GetUserSchema, CreateUpdateUserSchema, AccountSchema, GetAccountSchema, UpdateAccountSchema
 from dal import users_crud, accounts_crud
 
 account_router = APIRouter(prefix="/accounts", tags=["Accounts"])
 
 
-@account_router.get("/user/{user_id}", response_model=list[AccountSchema])
+@account_router.get("/user/{user_id}", response_model=list[AccountScheme])
 async def get_accounts_by_user(user_id: Annotated[int, Path()], db: Session = Depends(get_db), skip: int = 0,
                                limit: int = 10):
     accs = accounts_crud.get_accounts_by_user(db, user_id=user_id, skip=skip, limit=limit)
@@ -23,7 +22,7 @@ async def get_accounts_by_user(user_id: Annotated[int, Path()], db: Session = De
     return accs
 
 
-@account_router.get("/{acc_id}", response_model=AccountSchema)
+@account_router.get("/{acc_id}", response_model=AccountScheme)
 async def get_account_by_id(acc_id: Annotated[int, Path()], db: Session = Depends(get_db)):
     acc = accounts_crud.get_account_by_id(db, acc_id)
     if not acc:
@@ -36,8 +35,8 @@ async def remove_account(acc_id: Annotated[int, Path()], db: Session = Depends(g
     return accounts_crud.remove_account(db, acc_id)
 
 
-@account_router.post("/", response_model=AccountSchema, status_code=status.HTTP_201_CREATED)
-async def create_account(account: AccountSchema = Body(example={
+@account_router.post("/", response_model=AccountScheme, status_code=status.HTTP_201_CREATED)
+async def create_account(account: AccountScheme = Body(example={
     "user_id": "ID of the user",
     "default_currency_id": "ID of the currency",
     "balance": 100
@@ -45,6 +44,6 @@ async def create_account(account: AccountSchema = Body(example={
     return accounts_crud.create_account(db, account)
 
 
-@account_router.put("/{acc_id}", response_model=UpdateAccountSchema)
-async def update_account(acc_id: int, account: UpdateAccountSchema = Body(), db: Session = Depends(get_db)):
+@account_router.put("/{acc_id}", response_model=UpdateAccountScheme)
+async def update_account(acc_id: int, account: UpdateAccountScheme = Body(), db: Session = Depends(get_db)):
     return accounts_crud.update_account(db, acc_id, account)

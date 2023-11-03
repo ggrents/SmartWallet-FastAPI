@@ -8,22 +8,27 @@ from starlette import status
 from starlette.responses import JSONResponse
 
 from dal import accounts_crud
+from data.models.account import Account
+from data.models.currency import Currency
+from data.models.transaction import Transaction
+from data.models.user import User
+from data.schemas.account import GetAccountScheme, ReplData, CreateSelfAccount, ReplAcc
+from data.schemas.currency import GetCurrencyScheme
+from data.schemas.transaction import GetTransactionScheme
+from data.schemas.user import GetUserScheme
 from dependencies import get_current_user, get_db
-from models import User, Account, Currency
-from schemas import GetUserSchema, GetAccountSchema, GetCurrencySchema, ReplData, CreateSelfAccount, AccountSchema, \
-    ReplAcc
 
 me_router = APIRouter(prefix="/me", tags=["Me"])
 
 
 @me_router.get("")
-def profile(current_user: User = Depends(get_current_user)) -> GetUserSchema:
+def profile(current_user: User = Depends(get_current_user)) -> GetUserScheme:
     return current_user
 
 
 @me_router.get("/accounts")
 async def get_my_accounts(current_user: User = Depends(get_current_user),
-                          db: Session = Depends(get_db)) -> list[GetAccountSchema]:
+                          db: Session = Depends(get_db)) -> list[GetAccountScheme]:
     accs = accounts_crud.get_accounts_by_user(db, user_id=current_user.id, skip=0, limit=100)
     if not accs:
         raise HTTPException(status_code=404, detail="You do not have accounts!")
@@ -31,7 +36,7 @@ async def get_my_accounts(current_user: User = Depends(get_current_user),
     return accs
 
 
-@me_router.get("/currencies", response_model=list[GetCurrencySchema])
+@me_router.get("/currencies", response_model=list[GetCurrencyScheme])
 async def get_currencies(
         db: Session = Depends(get_db)):
     query = select(Currency)
@@ -77,7 +82,7 @@ async def create_account(acc: Annotated[CreateSelfAccount, Body()], user: User =
 @me_router.post("/accounts/repl")
 async def replenish_account(data: Annotated[ReplAcc, Body()], db: Session = Depends(get_db),
                             user: User = Depends(get_current_user)):
-    if data.amount > user.balance :
+    if data.amount > user.balance:
         return HTTPException(status_code=status.HTTP_402_PAYMENT_REQUIRED, detail="Insufficient funds")
 
     query1 = select(Account.default_currency_id).where(Account.id == data.account_id)
@@ -101,3 +106,29 @@ async def replenish_account(data: Annotated[ReplAcc, Body()], db: Session = Depe
 
     return JSONResponse(content={"detail": "The account has been topped up"}, status_code=200)
 
+
+@me_router.get("/transfers", response_model=list[GetTransactionScheme])
+def get_remmitances(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    query1 = select(Account.id).where(Account.user_id == user.id)
+    accs = db.execute(query1).scalars().all()
+    print(accs)
+    query = select(Transaction).where(Transaction.sender_account_id in accs)
+    print(query)
+    result = db.execute(query).scalars().all()
+    print(result)
+    return result
+
+
+@me_router.get("/transfers/send")
+def get_sended_remmitances():
+    pass
+
+
+@me_router.get("/transfers/received")
+def get_received_remmitances():
+    pass
+
+
+@me_router.post("/transfers/make")
+def transfer():
+    pass
