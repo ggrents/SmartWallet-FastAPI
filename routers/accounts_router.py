@@ -2,6 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Path, Body, HTTPException
 from sqlalchemy.orm import Session
+from starlette import status
 from starlette.requests import Request
 from starlette.responses import Response
 
@@ -35,7 +36,7 @@ async def remove_account(acc_id: Annotated[int, Path()], db: Session = Depends(g
     return accounts_crud.remove_account(db, acc_id)
 
 
-@account_router.post("/", response_model=AccountSchema)
+@account_router.post("/", response_model=AccountSchema, status_code=status.HTTP_201_CREATED)
 async def create_account(account: AccountSchema = Body(example={
     "user_id": "ID of the user",
     "default_currency_id": "ID of the currency",

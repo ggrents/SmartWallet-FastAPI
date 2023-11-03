@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from starlette import status
 
 from models import User
 from dependencies import get_db
@@ -8,7 +9,7 @@ from schemas import SignUpUser, GetUserSchema, LoginUser, Token
 user_manage_router = APIRouter(tags=["User Manager"])
 
 
-@user_manage_router.post("/signup", response_model=GetUserSchema)
+@user_manage_router.post("/signup", response_model=GetUserSchema, status_code=status.HTTP_201_CREATED)
 def signup(user: SignUpUser, db: Session = Depends(get_db)) -> GetUserSchema:
     _user = User(username=user.username, email=user.email)
     _user.hash_password(user.password)

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class SignUpUser(BaseModel):
@@ -39,15 +39,25 @@ class AccountSchema(BaseModel):
 class GetCurrencySchema(BaseModel):
     currency_code: str
     currency_symbol: str
-    exchange_rate : float
+    exchange_rate: float
 
 
 class GetAccountSchema(BaseModel):
     currency: GetCurrencySchema
     balance: float
 
-class ReplData(BaseModel) :
-    amount : float
+
+class ReplData(BaseModel):
+    amount: float = Field(..., gt=0)
+
+
+class ReplAcc(BaseModel):
+    amount: float = Field(..., gt=0)
+    account_id: int
+
+
+class CreateSelfAccount(BaseModel):
+    default_currency_id: int
 
 
 class UpdateAccountSchema(BaseModel):
