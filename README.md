@@ -3,7 +3,7 @@
 </p>
 
 ## About
-Smart Wallet is an API developed by me for convenient management of my finances. 
+Smart Wallet is an API developed by me for convenient management of finances. 
 Using the application, you can conveniently control your savings in different currencies, which allows you to reach a new level of financial literacy.
 Smart Wallet is becoming an essential tool for people who seek to increase their financial awareness and effectively manage their savings.
 
