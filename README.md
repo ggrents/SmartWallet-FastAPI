@@ -17,7 +17,7 @@ My project uses various Python libraries and packages to provide its functionali
 After activating the virtual environment, you will work in an isolated environment where only the dependencies of your project will be installed. This helps to avoid conflicts between different projects and simplifies dependency management.
 Now, after installing the dependencies and activating the virtual environment, your project should be ready to launch.
 
---------------Using the project---------------
+## Using the project
 
 1. Registration and authorization:
 
@@ -45,7 +45,8 @@ All financial transactions in SmartWallet are provided with a high level of encr
 5. Application Administration:
 
 The application implements endpoints for administrators that allow monitoring, managing and controlling user transactions to prevent unwanted traffic.
---------------Usage examples------------
+
+## Usage examples
 
 In this section, I want to show you a set of endpoints generated in swagger that the application user can interact with :
 
@@ -53,8 +54,7 @@ In this section, I want to show you a set of endpoints generated in swagger that
 
    <img src="https://sun9-27.userapi.com/impg/lsSEwEzoyoh4TAVUdTMp7R2OqT_iKholOwUJVA/A72BnfMB5yU.jpg?size=1667x982&quality=96&sign=e0492312d40e4e0a49235618c3dbcc7b&type=album" height = "400" width="800">
 
-
---------------Contact information--------------
+## Contact information
 
 You can contact me for support, feedback and more information :
 
