@@ -1,7 +1,4 @@
-from typing import Optional
-
 from pydantic import BaseModel, Field
-
 from data.schemas.currency import GetCurrencyScheme
 
 

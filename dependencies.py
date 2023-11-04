@@ -1,11 +1,10 @@
+import jwt
+
 from data.models.user import User
 from database import SessionLocal
-from fastapi import Depends, HTTPException, status, Header
-
-import jwt
+from fastapi import Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 
-from database import Base
 from settings import SECRET_KEY
 
 

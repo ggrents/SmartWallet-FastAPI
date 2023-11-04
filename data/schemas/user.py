@@ -1,14 +1,29 @@
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError, EmailStr
+from pydantic.v1 import validator
 
 from data.schemas.account import GetAccountScheme
 
 
 class SignUpUser(BaseModel):
     username: str
-    email: str
-    password: str
+    email: EmailStr
+    password: str = Field(min_length=8)
+
+    @validator("password")
+    def validate_password(cls, value):
+
+        if not any(char.isdigit() for char in value):
+            raise ValidationError("The password must contain at least one digit")
+
+        if not any(char.isalpha() for char in value):
+            raise ValidationError("The password must contain at least one letter")
+
+        if not any(char.isalnum() or not char.isspace() for char in value):
+            raise ValidationError("The password must contain at least one special character")
+
+        return value
 
 
 class LoginUser(BaseModel):
@@ -26,7 +41,7 @@ class DataToken(BaseModel):
 
 
 class CreateUpdateUserScheme(BaseModel):
-    username: str
+    username: str = Field(min_length=3, max_length=25)
     email: str
     is_active: bool
     password: str

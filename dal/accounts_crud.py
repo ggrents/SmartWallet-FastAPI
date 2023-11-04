@@ -1,7 +1,10 @@
 from fastapi import HTTPException
-from sqlalchemy import select, delete, insert, update
+
 from starlette.responses import JSONResponse
+
+from sqlalchemy import select, delete, insert, update
 from sqlalchemy.orm import Session
+
 from data.models.account import Account
 from data.schemas.account import AccountScheme, UpdateAccountScheme
 
@@ -10,14 +13,16 @@ def get_accounts_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 
     query = select(Account).where(Account.user_id == user_id)
     result = db.execute(query)
     _accs = result.scalars().all()
-    return result
+    return _accs
 
 
 def get_account_by_id(db: Session, acc_id: int):
     query = select(Account).filter(Account.id == acc_id)
     result = db.execute(query).scalar()
+
     if not result:
         raise HTTPException(status_code=404, detail="Account is not exist")
+
     return result
 
 
@@ -25,6 +30,7 @@ def remove_account(db: Session, acc_id: int):
     _acc = get_account_by_id(db, acc_id)
 
     query = delete(Account).where(Account.id == acc_id)
+
     db.execute(query)
     db.commit()
 
@@ -37,7 +43,6 @@ def create_account(db: Session, account: AccountScheme):
                                    balance=account.balance)
 
     db.execute(query)
-
     db.commit()
 
     return account
@@ -53,4 +58,5 @@ def update_account(db: Session, acc_id: int, account: UpdateAccountScheme):
     db.execute(query)
     db.commit()
     db.refresh(_account)
+
     return _account

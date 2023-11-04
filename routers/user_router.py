@@ -23,16 +23,20 @@ async def get_users(db: Session = Depends(get_db), skip: int = 0,
 @user_router.get("/{user_id}", response_model=GetUserScheme)
 async def get_user_by_id(user_id: Annotated[int, Path()], db: Session = Depends(get_db)):
     user = crud.get_user_by_id(db, user_id)
+
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+
     return user
 
 
 @user_router.get("/active/true")
 async def get_active_users(db: Session = Depends(get_db)):
     users = crud.get_active_users(db)
+
     if not users:
         raise HTTPException(status_code=404, detail="Users not found")
+
     return users
 
 

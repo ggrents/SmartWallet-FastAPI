@@ -5,5 +5,4 @@ The API provides a secure and efficient way to interact with your wallet,
  opening up a wide range of financial management functions in your application or service.
 """
 SECRET_KEY = "FJKSFJaljfklldkadiodklasdjak"
-
 SQLALCHEMY_DATABASE_URL = "sqlite:///./smart_wallet_29.db"

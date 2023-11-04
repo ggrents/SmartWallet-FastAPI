@@ -1,12 +1,8 @@
 from datetime import datetime, timedelta
-
-import bcrypt
-import jwt
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
-
 from database import Base
-from settings import SECRET_KEY
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DECIMAL
+
+from sqlalchemy import DateTime
+from sqlalchemy import Column, ForeignKey, Integer, DECIMAL
 from sqlalchemy.orm import relationship
 
 
